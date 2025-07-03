@@ -1,28 +1,19 @@
 #include <graphics.h>
 #include <conio.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <stdio.h>
 
-void main() {
-    int gd = DETECT, gm;
-    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
-
-    int x1, y1, x2, y2;
-    cout << "Enter start point (x1 y1): ";
-    cin >> x1 >> y1;
-    cout << "Enter end point (x2 y2): ";
-    cin >> x2 >> y2;
-
+void bresenham_lda(int x1, int y1, int x2, int y2){
     int dx = abs(x2 - x1);
     int dy = abs(y2 - y1);
     int x = x1, y = y1;
-    int p;
+    int p, i;
     int incx = (x2 > x1) ? 1 : -1;
     int incy = (y2 > y1) ? 1 : -1;
 
     if (dx > dy) {
         p = 2 * dy - dx;
-        for (int i = 0; i <= dx; i++) {
+        for (i = 0; i <= dx; i++) {
             putpixel(x, y, WHITE);
             x += incx;
             if (p < 0)
@@ -31,11 +22,10 @@ void main() {
                 y += incy;
                 p += 2 * (dy - dx);
             }
-            delay(50);
         }
     } else {
         p = 2 * dx - dy;
-        for (int i = 0; i <= dy; i++) {
+        for (i = 0; i <= dy; i++) {
             putpixel(x, y, WHITE);
             y += incy;
             if (p < 0)
@@ -44,10 +34,21 @@ void main() {
                 x += incx;
                 p += 2 * (dx - dy);
             }
-            delay(50);
         }
     }
+}
 
+void main() {
+    int gd = DETECT, gm;
+    int x1, y1, x2, y2;
+
+    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
+
+    printf("Enter start point (x1 y1): ");
+    scanf("%d %d", &x1 ,&y1);
+    printf( "Enter end point (x2 y2): ");
+    scanf("%d %d", &x2 ,&y2);
+    bresenham_lda(x1, y1, x2, y2);
     getch();
     closegraph();
 }
