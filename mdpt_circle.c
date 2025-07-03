@@ -1,52 +1,46 @@
 #include <graphics.h>
 #include <conio.h>
-#include <stdlib.h>
 #include <stdio.h>
 
-void mdpt_circle(int x1, int y1, int x2, int y2){
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int x = x1, y = y1;
-    int p;
-    int incx = (x2 > x1) ? 1 : -1;
-    int incy = (y2 > y1) ? 1 : -1;
-    int i;
-    if (dx > dy) {
-        p = 2 * dy - dx;
-        for (i = 0; i <= dx; i++) {
-            putpixel(x, y, WHITE);
-            x += incx;
-            if (p < 0)
-                p += 2 * dy;
-            else {
-                y += incy;
-                p += 2 * (dy - dx);
-            }
+void plot(int x, int y, int cx, int cy){
+    putpixel(cx + x, cy + y, WHITE);
+    putpixel(cx + x, cy - y, WHITE);
+    putpixel(cx - x, cy + y, WHITE);
+    putpixel(cx - x, cy - y, WHITE);
+    putpixel(cx + y, cy + x, WHITE);
+    putpixel(cx + y, cy - x, WHITE);
+    putpixel(cx - y, cy + x, WHITE);
+    putpixel(cx - y, cy - x, WHITE);
+}
+
+void mdpt_circle(int cx, int cy, int r){
+    int x = 0, y = r;
+    int p = 1 - r;
+
+    plot(x, y, cx, cy);
+
+    while (x < y) {
+        x++;
+        if (p < 0)
+            p += 2 * x + 1;
+        else {
+            y--;
+            p += 2 * (x - y) + 1;
         }
-    } else {
-        p = 2 * dx - dy;
-        for (i = 0; i <= dy; i++) {
-            putpixel(x, y, WHITE);
-            y += incy;
-            if (p < 0)
-                p += 2 * dx;
-            else {
-                x += incx;
-                p += 2 * (dx - dy);
-            }
-        }
+        plot(x, y, cx, cy);
     }
 }
 
-void main() {
+int main() {
     int gd = DETECT, gm;
-    int x1, y1, x2, y2;
+    int x1, y1, r;
     initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
-    printf("Enter start point (x1 y1): ");
+    printf("Enter center (x1 y1): ");
     scanf("%d %d", &x1 ,&y1);
-    printf( "Enter end point (x2 y2): ");
-    scanf("%d %d", &x2 ,&y2);
-    mdpt_circle(x1, y1, x2, y2);
+    printf( "Enter radius (R): ");
+    scanf("%d", &r);
+    mdpt_circle(x1, y1, r);
     getch();
     closegraph();
+    return 0;
 }
