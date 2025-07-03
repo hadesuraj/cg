@@ -1,6 +1,6 @@
 #include <graphics.h>
 #include <conio.h>
-#include <iostream.h>
+#include <stdio.h>
 
 #define INSIDE 0 // 0000
 #define LEFT 1   // 0001
@@ -8,7 +8,8 @@
 #define BOTTOM 4 // 0100
 #define TOP 8    // 1000
 
-float xmin = 100, ymin = 100, xmax = 300, ymax = 300;
+float xmin, ymin, xmax, ymax;
+int code1, code2, accept;
 
 int computeCode(float x, float y) {
     int code = INSIDE;
@@ -19,19 +20,11 @@ int computeCode(float x, float y) {
     return code;
 }
 
-void main() {
-    int gd = DETECT, gm;
-    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
-
-    float x1, y1, x2, y2;
-    cout << "Enter endpoints (x1 y1 x2 y2): ";
-    cin >> x1 >> y1 >> x2 >> y2;
-
+void cohen_suth(int x1, int y1, int x2, int y2){
     rectangle(xmin, ymin, xmax, ymax);
-
-    int code1 = computeCode(x1, y1);
-    int code2 = computeCode(x2, y2);
-    int accept = 0;
+    code1 = computeCode(x1, y1);
+    code2 = computeCode(x2, y2);
+    accept = INSIDE;
 
     while (1) {
         if ((code1 == 0) && (code2 == 0)) {
@@ -72,7 +65,23 @@ void main() {
     if (accept) {
         line(x1, y1, x2, y2);
     }
+}
+
+
+int main() {
+    int gd = DETECT, gm;
+
+    float x1, y1, x2, y2;
+    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
+    printf("Enter Viewport coordinates (xmin ymin xmax ymax): ");
+    scanf("%f %f %f %f", &xmin, &ymin, &xmax, &ymax);
+    printf("Enter line endpoints (x1 y1 x2 y2): ");
+    scanf("%f %f %f %f", &x1, &y1, &x2, &y2);
+
+    cohen_suth(x1, y1, x2, y2);
 
     getch();
     closegraph();
+    return 0;
 }
+
