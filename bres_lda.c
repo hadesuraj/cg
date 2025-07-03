@@ -3,42 +3,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void bresenham_lda(int x1, int y1, int x2, int y2){
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int x = x1, y = y1;
-    int p, i;
-    int incx = (x2 > x1) ? 1 : -1;
-    int incy = (y2 > y1) ? 1 : -1;
+void bresenham_lda(int x0, int y0, int x1, int y1){
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
 
-    if (dx > dy) {
-        p = 2 * dy - dx;
-        for (i = 0; i <= dx; i++) {
-            putpixel(x, y, WHITE);
-            x += incx;
-            if (p < 0)
-                p += 2 * dy;
-            else {
-                y += incy;
-                p += 2 * (dy - dx);
-            }
+    while (1) {
+        putpixel(x0, y0, WHITE);
+
+        if (x0 == x1 && y0 == y1)
+            break;
+
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
         }
-    } else {
-        p = 2 * dx - dy;
-        for (i = 0; i <= dy; i++) {
-            putpixel(x, y, WHITE);
-            y += incy;
-            if (p < 0)
-                p += 2 * dx;
-            else {
-                x += incx;
-                p += 2 * (dx - dy);
-            }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
         }
     }
 }
 
-void main() {
+int main(void) {
     int gd = DETECT, gm;
     int x1, y1, x2, y2;
 
@@ -51,4 +41,5 @@ void main() {
     bresenham_lda(x1, y1, x2, y2);
     getch();
     closegraph();
+    return 0;
 }
